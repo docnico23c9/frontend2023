@@ -1,95 +1,109 @@
 Componente Carrusel 
 // Carrusel con Imagenes
 <template>
-    <div class="logo-carousel">
-      <div class="logo-container" ref="logoContainer">
-        <div class="logos" v-for="(logo, index) in logos" :key="index">
-          <img :src="logo.src" :alt="logo.alt" />
-        </div>
+  <!-- Una plantilla que contiene un carrusel de logotipos -->
+  <div class="logo-carousel">
+    <div class="logo-container" ref="logoContainer">
+      <!-- Contenedor de logotipos -->
+      <div class="logos" v-for="(logo, index) in logos" :key="index">
+        <!-- Iteración sobre la lista de logotipos para mostrar cada imagen -->
+        <img :src="logo.src" :alt="logo.alt" />
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { onMounted, onBeforeUnmount, ref } from 'vue';
-  
-  const logos = [
-    { src: 'https://seeklogo.com/images/G/Gandhi-logo-0A06470998-seeklogo.com.png', alt: 'Gandhi' },
-    { src: 'https://logistalibros.com/SiteAssets/static/img/logo_grupo_planeta-editoriales.png', alt: 'Libreria el Planeta' },
-    { src: 'https://evaporto.com/wp-content/uploads/2022/05/La-Casa-del-Libro-Logo-%C2%BFQue-hago-con-mi-vida.png', alt: 'Casa del Libro' },
-    { src: 'https://1000marcas.net/wp-content/uploads/2019/11/Amazon-logo.png', alt: 'Amazon' },
-    { src: 'https://statics.cdn1.buscalibre.com/seleccionPais/seleccionPais-logo.png', alt: 'Buscalibre' },
-    { src: 'https://plazamexicogdl.mx/wp-content/uploads/logo_lg-1.png', alt: 'Gonvill' },
+  </div>
+</template>
 
-  ];
-  
-  const startAnimation = (container) => {
-    const speed = 50; // Velocidad de desplazamiento
-    const containerWidth = container.offsetWidth;
-    let pos = 0;
-  
-    const scroll = () => {
-      pos -= 1;
-      if (pos < -containerWidth) {
-        pos = 0;
-      }
-      container.style.left = pos + 'px';
-    };
-  
-    const interval = setInterval(scroll, speed);
-  
-    onBeforeUnmount(() => {
-      clearInterval(interval);
-    });
+<script setup>
+import { onMounted, onBeforeUnmount, ref } from 'vue';
+
+// Lista de logotipos con sus respectivas fuentes y descripciones alternativas
+const logos = [
+{ src: 'https://seeklogo.com/images/G/Gandhi-logo-0A06470998-seeklogo.com.png', alt: 'Gandhi' },
+{ src: 'https://logistalibros.com/SiteAssets/static/img/logo_grupo_planeta-editoriales.png', alt: 'Libreria el Planeta' },
+{ src: 'https://evaporto.com/wp-content/uploads/2022/05/La-Casa-del-Libro-Logo-%C2%BFQue-hago-con-mi-vida.png', alt: 'Casa del Libro' },
+{ src: 'https://1000marcas.net/wp-content/uploads/2019/11/Amazon-logo.png', alt: 'Amazon' },
+{ src: 'https://statics.cdn1.buscalibre.com/seleccionPais/seleccionPais-logo.png', alt: 'Buscalibre' },
+{ src: 'https://plazamexicogdl.mx/wp-content/uploads/logo_lg-1.png', alt: 'Gonvill' },
+];
+
+// Función para iniciar la animación del carrusel de logotipos
+const startAnimation = (container) => {
+  const speed = 50; // Velocidad de desplazamiento
+  const containerWidth = container.offsetWidth;
+  let pos = 0;
+
+  const scroll = () => {
+    pos -= 1;
+    if (pos < -containerWidth) {
+      pos = 0;
+    }
+    container.style.left = pos + 'px';
   };
-  
-  const logoContainer = ref(null);
-  
-  onMounted(() => {
-    const container = logoContainer.value;
-    const cloneLogos = container.innerHTML;
-    container.innerHTML += cloneLogos;
-    startAnimation(container);
+
+  // Configurar el intervalo para la animación
+  const interval = setInterval(scroll, speed);
+
+  // Limpiar el intervalo cuando se desmonta el componente
+  onBeforeUnmount(() => {
+    clearInterval(interval);
   });
-  </script>
-  
-  <style>
-  .logo-carousel {
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .logo-container {
-    display: flex;
-    position: relative;
-  }
-  
-  .logos {
-    flex: 0 0 auto;
-  }
-  
-  .logos img {
-    max-width: 100px; 
-    margin: 0 10px; /* Espacio entre logos */
-  }
-  </style>
+};
+
+// Referencia al contenedor de logotipos
+const logoContainer = ref(null);
+
+// Acción ejecutada al montar el componente
+onMounted(() => {
+  const container = logoContainer.value;
+  const cloneLogos = container.innerHTML;
+  container.innerHTML += cloneLogos; // Duplicar los logotipos para crear un efecto de bucle
+  startAnimation(container); // Iniciar la animación
+});
+</script>
+
+<style>
+/* Estilos CSS para el carrusel de logotipos */
+.logo-carousel {
+  width: 100%;
+  overflow: hidden;
+}
+
+.logo-container {
+  display: flex;
+  position: relative;
+}
+
+.logos {
+  flex: 0 0 auto;
+}
+
+.logos img {
+  max-width: 100px; 
+  margin: 0 10px; /* Espacio entre logos */
+}
+</style>
+
 -----------------------------------------------------------------------------------------------------------------------------------------  
 //Carrusel con Frases 
 <template>
+  <!-- Componente QCarousel de Quasar para mostrar una serie de frases -->
   <q-carousel
     class="frases-carousel"
     arrows
     autoplay
     infinite
-    :autoplay-interval="3000" 
+    :autoplay-interval="3000"
   >
+    <!-- Iteración sobre las frases para mostrar cada una en un QCarouselSlide -->
     <q-carousel-slide
       v-for="(frase, index) in frases"
       :key="index"
       :class="{ active: index === currentIndex }"
     >
+      <!-- Componente QCard para mostrar cada frase -->
       <q-card class="frase">
         <q-card-section class="text-center">
+          <!-- Mostrar el texto de la frase utilizando QCardText -->
           <q-card-text>{{ frase.texto }}</q-card-text>
         </q-card-section>
       </q-card>
@@ -100,23 +114,27 @@ Componente Carrusel
 <script setup>
 import { ref } from 'vue';
 
+// Lista de frases para mostrar en el carrusel
 const frases = ref([
   { texto: '¡Oferta especial por tiempo limitado!' },
   { texto: 'Descuentos increíbles en productos seleccionados' },
   { texto: 'Envío gratuito en compras superiores a $50' },
- 
 ]);
 
+// Índice de la frase actualmente visible en el carrusel
 const currentIndex = ref(0);
 </script>
 
 <style scoped>
+/* Estilos CSS para las frases en el carrusel */
 .frase {
   opacity: 0;
   transition: opacity 0.5s ease;
 }
 
+/* Estilo para la frase activa (visible) en el carrusel */
 .frase.active {
   opacity: 1;
 }
 </style>
+
