@@ -1,1 +1,122 @@
 Componente Carrusel 
+// Carrusel con Imagenes
+<template>
+    <div class="logo-carousel">
+      <div class="logo-container" ref="logoContainer">
+        <div class="logos" v-for="(logo, index) in logos" :key="index">
+          <img :src="logo.src" :alt="logo.alt" />
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { onMounted, onBeforeUnmount, ref } from 'vue';
+  
+  const logos = [
+    { src: 'https://seeklogo.com/images/G/Gandhi-logo-0A06470998-seeklogo.com.png', alt: 'Gandhi' },
+    { src: 'https://logistalibros.com/SiteAssets/static/img/logo_grupo_planeta-editoriales.png', alt: 'Libreria el Planeta' },
+    { src: 'https://evaporto.com/wp-content/uploads/2022/05/La-Casa-del-Libro-Logo-%C2%BFQue-hago-con-mi-vida.png', alt: 'Casa del Libro' },
+    { src: 'https://1000marcas.net/wp-content/uploads/2019/11/Amazon-logo.png', alt: 'Amazon' },
+    { src: 'https://statics.cdn1.buscalibre.com/seleccionPais/seleccionPais-logo.png', alt: 'Buscalibre' },
+    { src: 'https://plazamexicogdl.mx/wp-content/uploads/logo_lg-1.png', alt: 'Gonvill' },
+
+  ];
+  
+  const startAnimation = (container) => {
+    const speed = 50; // Velocidad de desplazamiento
+    const containerWidth = container.offsetWidth;
+    let pos = 0;
+  
+    const scroll = () => {
+      pos -= 1;
+      if (pos < -containerWidth) {
+        pos = 0;
+      }
+      container.style.left = pos + 'px';
+    };
+  
+    const interval = setInterval(scroll, speed);
+  
+    onBeforeUnmount(() => {
+      clearInterval(interval);
+    });
+  };
+  
+  const logoContainer = ref(null);
+  
+  onMounted(() => {
+    const container = logoContainer.value;
+    const cloneLogos = container.innerHTML;
+    container.innerHTML += cloneLogos;
+    startAnimation(container);
+  });
+  </script>
+  
+  <style>
+  .logo-carousel {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .logo-container {
+    display: flex;
+    position: relative;
+  }
+  
+  .logos {
+    flex: 0 0 auto;
+  }
+  
+  .logos img {
+    max-width: 100px; 
+    margin: 0 10px; /* Espacio entre logos */
+  }
+  </style>
+-----------------------------------------------------------------------------------------------------------------------------------------  
+//Carrusel con Frases 
+<template>
+  <q-carousel
+    class="frases-carousel"
+    arrows
+    autoplay
+    infinite
+    :autoplay-interval="3000" 
+  >
+    <q-carousel-slide
+      v-for="(frase, index) in frases"
+      :key="index"
+      :class="{ active: index === currentIndex }"
+    >
+      <q-card class="frase">
+        <q-card-section class="text-center">
+          <q-card-text>{{ frase.texto }}</q-card-text>
+        </q-card-section>
+      </q-card>
+    </q-carousel-slide>
+  </q-carousel>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+
+const frases = ref([
+  { texto: '¡Oferta especial por tiempo limitado!' },
+  { texto: 'Descuentos increíbles en productos seleccionados' },
+  { texto: 'Envío gratuito en compras superiores a $50' },
+ 
+]);
+
+const currentIndex = ref(0);
+</script>
+
+<style scoped>
+.frase {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.frase.active {
+  opacity: 1;
+}
+</style>
